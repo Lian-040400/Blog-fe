@@ -3,24 +3,33 @@ import styles from 'styled-components'
 export const HomePageContainer = styles.div`
   width: 100%;
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
+  // justify-content: end;
+  display: grid;
+  grid-template-columns: auto auto auto auto;
   gap: 20px;
 `
 
-
-export const AddButton = styles.button`
-  border: 0 solid;
-  background: green;
-  cursor: pointer;
-  padding: 10px;
+export const PlusWraper = styles.div`
+width:100%;
+height:100%;
+display: inline-flex;
+justify-content: center;
+align-items:center;
+color:#2f85e0;
+font-size:36px;
+opacity:0.8;
 `
 
-export const CardWrapper =  styles.div`
+
+
+export const CardWrapper = styles.div`
   width: 100%;
+  // height:px;
   display: flex;
   padding: 20px;
   border-radius: 7px;
-  height: max-content;
+  // height: max-content;
   background: #ededed;
   flex-direction: column;
 `
@@ -31,3 +40,4 @@ export const CardTitle = styles.p`
 `
 
 export const CardDescription = styles.p``
+
