@@ -1,11 +1,22 @@
-import { v4 as uuid } from "uuid";
+import { toast } from "react-toastify";
 
 import { store } from "@store";
 import { POSTS_TYPES } from '@store/types'
+import mockPostsData from '@__mock__/posts.json'
+import { StorageService } from "@services/StorageService";
 import {
   getPost as getPostApi,
   getAllPosts as getAllPostsApi,
+  createPost as createPostApi
 } from "@api/posts";
+
+export const addMockPosts = () => {
+  const posts = StorageService.get('posts') ?? []
+
+  if (posts.length) return
+
+  StorageService.set('posts', mockPostsData)
+}
 
 export const getAllPosts = async () => {
   store.dispatch({
@@ -20,6 +31,7 @@ export const getAllPosts = async () => {
   })
 }
 
+
 export const getPost = async (id) => {
   try {
     store.dispatch({
@@ -33,19 +45,28 @@ export const getPost = async (id) => {
       payload: post
     })
   } catch (e) {
+    toast.error(e.message)
     store.dispatch({
-      type: POSTS_TYPES.GET_POST_REQUEST,
+      type: POSTS_TYPES.GET_POST_FAILED,
       payload: e.message
     })
   }
 }
 
-// const posts = [
-//   {
-//     id: uuid(),
-//     title: "The end of the world",
-//     description: "This is a short description of this post",
-//     author: "Lianna Khachatryan"
-//     created: +new Date()
-//   },
-// ]
+export const createPost = async (params, onSuccess) => {
+  try {
+    store.dispatch({
+      type: POSTS_TYPES.CREATE_POST_REQUEST,
+    })
+  
+    await createPostApi(params)
+  
+    store.dispatch({
+      type: POSTS_TYPES.CREATE_POST_SUCCESS,
+    })
+
+    onSuccess()
+  } catch (e) {
+    console.log(e)
+  }
+}

@@ -8,7 +8,6 @@ export const Navbar = () => {
   return (
     <S.NavbarContainer>
       <S.Logo onClick={handleClick}>Blog</S.Logo>
-      <S.Description> You can finde interesting news</S.Description>
     </S.NavbarContainer>
   )
 }

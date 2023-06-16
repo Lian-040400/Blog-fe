@@ -1,89 +1,44 @@
-import { useEffect } from "react"
+import { useEffect, useLayoutEffect } from "react"
 import { useSelector } from 'react-redux'
-import { getAllPosts } from "@store/actions/posts"
-import { v4 as uuid } from "uuid";
+import { useNavigate } from "react-router-dom"
 import { PlusOutlined } from '@ant-design/icons';
 
 import * as S from './styles'
-import { useNavigate } from "react-router-dom"
+import { Loader } from "@components/ui/Loader";
+import { formatDate } from "@utils/formatDate";
+import { getAllPosts, addMockPosts } from "@store/actions/posts"
 
 export const Home = () => {
   const navigate = useNavigate()
-  // const posts = useSelector(state => state.posts.posts)
-  const posts = [
-    {
-      id: 1,
-      // id: uuid(),
-      title: "The end of the world",
-      description: "This is a short description of this post",
-      author: "Lianna Khachatryan",
-      created: +new Date(),
-    },
-    {
-      id: 2,
-      // id: uuid(),
-      title: "The end of the world",
-      description: "This is a short description of this post",
-      author: "Lianna Khachatryan",
-      created: +new Date(),
-    },
-    {
-      id: 3,
-      // id: uuid(),
-      title: "The end of the world",
-      description: "This is a short description of this post",
-      author: "Lianna Khachatryan",
-      created: +new Date(),
-    },
-    {
-      id: 4,
-      // id: uuid(),
-      title: "The end of the world",
-      description: "This is a short description of this post",
-      author: "Lianna Khachatryan",
-      created: +new Date(),
-    },
-    {
-      id: 5,
-      // id: uuid(),
-      title: "The end of the world",
-      description: "This is a short description of this post",
-      author: "Lianna Khachatryan",
-      created: +new Date(),
-    },
-    {
-      id: 6,
-      // id: uuid(),
-      title: "The end of the world",
-      description: "This is a short description of this post",
-      author: "Lianna Khachatryan",
-      created: +new Date(),
-    },
+  const posts = useSelector(state => state.posts.posts)
+  const postsLoading = useSelector(state => state.posts.postsLoading)
 
-  ]
-
-  const handleAddBlog = () => navigate('/post/create')
+  useLayoutEffect(() => {
+    addMockPosts()
+  }, [])
 
   useEffect(() => {
     getAllPosts()
   }, [])
 
+  if (postsLoading) {
+    return <Loader/>
+  }
+
   return (
     <S.HomePageContainer>
-      {/* <S.AddButton onClick={handleAddBlog}>Add Blog +</S.AddButton> */}
-      {posts ? posts.map(({ id, title, description }) => (
-        <S.CardWrapper key={id} onClick={() => navigate(`/post/${id}`)}>
-          <S.CardTitle>{title}</S.CardTitle>
-          <S.CardDescription>{description}</S.CardDescription>
-        </S.CardWrapper>
-      )) : (
-        <div>No blogs yet</div>
-      )}
-      <S.CardWrapper onClick={() => navigate(`/post/${id}`)}>
-        <S.PlusWraper onClick={handleAddBlog}>
-            <PlusOutlined />
+      <S.CardWrapper onClick={() => navigate('/post/create')}>
+        <S.PlusWraper>
+          <PlusOutlined />
         </S.PlusWraper>
       </S.CardWrapper>
+      {!!posts.length && posts.map(({ id, title, content, created }) => (
+        <S.CardWrapper key={id} onClick={() => navigate(`/post/${id}`)}>
+          <S.CardDetail>{formatDate(created)}</S.CardDetail>
+          <S.CardTitle>{title}</S.CardTitle>
+          <S.CardDescription>{content}...</S.CardDescription>
+        </S.CardWrapper>
+      ))}
     </S.HomePageContainer>
   )
 }

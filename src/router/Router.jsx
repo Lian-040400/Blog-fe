@@ -9,7 +9,7 @@ import { PageLayout } from "@components/layouts/PageLayout";
 export const Router = () => {
   return (
     <PageLayout>
-      <Routes location={location}>
+      <Routes>
         <Route path='/' element={<Home />} />
         <Route path='/post/:id' element={<Post />} />
         <Route path='/post/create' element={<CreatePost />} />
